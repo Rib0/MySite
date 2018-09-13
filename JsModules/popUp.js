@@ -1,6 +1,6 @@
 (function () {
     var images = document.getElementsByClassName('main-img'),
-        modal = document.getElementsByClassName('popUp-modal')[0],
+        modal = document.getElementsByClassName('popup-modal')[0],
         next = document.getElementById('next'),
         prev = document.getElementById('prev'),
         currentImg,
@@ -13,7 +13,7 @@
                 var img = document.createElement('img')
                 img.src = images[i].src
                 modal.appendChild(img)
-                modal.classList.add('popUp-modal-active')
+                modal.classList.add('popup-modal-active')
                 currentImg = i
                 active = true
             }
@@ -44,7 +44,7 @@
 
     exit.onclick = function () {
         modal.removeChild(modal.lastChild)
-        modal.classList.remove('popUp-modal-active')
+        modal.classList.remove('popup-modal-active')
         active = false
     }
 })()
