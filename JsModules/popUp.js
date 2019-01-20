@@ -1,50 +1,55 @@
-(function () {
-    var images = document.getElementsByClassName('main-img'),
-        modal = document.getElementsByClassName('popup-modal')[0],
-        next = document.getElementById('next'),
-        prev = document.getElementById('prev'),
-        currentImg,
-        exit = document.getElementById('exit'),
-        active = false
+class PopUp {
+    constructor () {
+        this.images = document.getElementsByClassName('popUp');
+        this.chevronLeft = document.getElementById('chevron-left');
+        this.chevronRight = document.getElementById('chevron-right');
+        this.dialog = document.getElementById('dialog');
+        this.shadowField = document.getElementById('shadowField')
+        this.imageIndex;
 
-    for (let i = 0; i < images.length; i++) {
-        images[i].onclick = function (e) {
-            if (!active) {
-                var img = document.createElement('img')
-                img.src = images[i].src
-                modal.appendChild(img)
-                modal.classList.add('popup-modal-active')
-                currentImg = i
-                active = true
-            }
+        [].forEach.call(this.images, (image, index) => {
+            image.onclick = () => this.openPopUp(index);
+        })
+        this.chevronLeft.onclick = this.chevronRight.onclick = (e) => {
+            this.slideImage(e);
+        }
+        this.shadowField.onclick = () => {
+            this.closePopUp();
         }
     }
 
-    prev.addEventListener('click', function () {
-        modal.removeChild(modal.lastChild)
-        var img = document.createElement('img')
-        currentImg -=1
-        if (currentImg < 0) {
-            currentImg = images.length - 1
-        }
-        img.src = images[currentImg].src
-        modal.appendChild(img)
-    })
-
-    next.addEventListener('click', function () {
-        modal.removeChild(modal.lastChild)
-        var img = document.createElement('img')
-        currentImg +=1
-        if (currentImg > 4) {
-            currentImg = 0
-        }
-        img.src = images[currentImg].src
-        modal.appendChild(img)
-    })
-
-    exit.onclick = function () {
-        modal.removeChild(modal.lastChild)
-        modal.classList.remove('popup-modal-active')
-        active = false
+    openPopUp (index) {
+        this.shadowField.style.display = "block";
+        this.dialog.style.display = 'block';
+        const image = document.createElement('img');
+        image.src = this.images[index].src;
+        image.onload = () => this.dialog.appendChild(image);
+        this.active = true;
+        this.imageIndex = index;
     }
-})()
+
+    closePopUp () {
+        const img = this.dialog.querySelector('img');      
+        this.dialog.removeChild(img);               
+        this.dialog.style.display = '';
+        this.shadowField.style.display = "";
+        this.active = false;
+    }
+
+    slideImage (e) {
+        const img = this.dialog.querySelector('img');
+        const {role} = e.currentTarget.dataset;
+        if (role === 'left') this.imageIndex--;
+        if (role === 'right') this.imageIndex++;
+
+        if (this.imageIndex > this.images.length - 1) this.imageIndex = 0;
+        if (this.imageIndex < 0) this.imageIndex = this.images.length - 1;
+
+        this.dialog.removeChild(img);
+        const image = document.createElement('img');
+        image.src = this.images[this.imageIndex].src;
+        image.onload = () => this.dialog.appendChild(image);    
+    }
+}
+
+const popUp = new PopUp();
