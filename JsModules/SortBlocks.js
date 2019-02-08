@@ -15,11 +15,11 @@ class SortBlocks {
             return first.price - second.price;
         })
         const button = document.querySelector('.sort');
-        button.addEventListener('click', () => this.sort());
+        button.addEventListener('click', (event) => this.sort(event));
         this.init();
     }
 
-    sort () {
+    sort (event) {
         [].forEach.call(this.blocks, block => {
             [].forEach.call(this.sortedBlocks, (sortBlock, index) => {
                 if (block === sortBlock.target) {
@@ -34,6 +34,10 @@ class SortBlocks {
             })
         })
         this.sorted = !this.sorted;
+        if (this.sorted)
+            event.target.firstChild.data = 'Отменить сортировку'
+        else 
+            event.target.firstChild.data = 'Сортировать круизы по цене';
     }
 
     init () {
